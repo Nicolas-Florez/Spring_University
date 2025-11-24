@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Universidad · Panel REST</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header class="hero">
+        <div class="hero__content">
+            <p class="hero__tag">Universidad · API REST</p>
+            <h1>Panel Administrativo</h1>
+            <p class="hero__subtitle">
+                Gestiona estudiantes, profesores y cursos desde una sola pantalla.
+                Todas las acciones consumen directamente los endpoints de Spring Boot.
+            </p>
+            <div class="hero__actions">
+                <button id="refreshAll" class="btn btn--primary">Actualizar todo</button>
+                <a href="#students-panel" class="btn btn--ghost">Empezar ahora</a>
+            </div>
+        </div>
+        <div class="hero__status">
+            <p>Estado API:</p>
+            <div id="apiStatus" class="status status--unknown">Comprobando...</div>
+            <small>Base: http://localhost:8080/api</small>
+        </div>
+    </header>
+
+    <main class="dashboard">
+        <section id="students-panel" class="panel">
+            <header class="panel__header">
+                <div>
+                    <p class="panel__tag">/api/estudiantes</p>
+                    <h2>Estudiantes</h2>
+                    <p>Crear, listar, consultar y asignar cursos.</p>
+                </div>
+            </header>
+            <div class="panel__grid">
+                <article class="card">
+                    <h3>Listar estudiantes</h3>
+                    <p>GET /api/estudiantes</p>
+                    <button class="btn btn--primary" data-action="listStudents">Listar</button>
+                    <div class="result" id="studentsList"></div>
+                </article>
+
+                <article class="card">
+                    <h3>Buscar por ID</h3>
+                    <p>GET /api/estudiantes/{id}</p>
+                    <form id="studentByIdForm">
+                        <label>ID del estudiante
+                            <input type="number" name="studentId" min="1" required>
+                        </label>
+                        <button class="btn btn--primary">Buscar</button>
+                    </form>
+                    <div class="result" id="studentByIdResult"></div>
+                </article>
+
+                <article class="card card--wide">
+                    <h3>Crear estudiante</h3>
+                    <p>POST /api/estudiantes</p>
+                    <form id="createStudentForm" class="form-grid">
+                        <label>Nombre completo
+                            <input type="text" name="nombre" placeholder="Ana Torres" required>
+                        </label>
+                        <label>Email
+                            <input type="email" name="email" placeholder="ana@mail.com" required>
+                        </label>
+                        <label>Fecha de nacimiento
+                            <input type="date" name="fechaNacimiento" required>
+                        </label>
+                        <label>Dirección
+                            <input type="text" name="direccion" placeholder="Calle Falsa 123" required>
+                        </label>
+                        <label>Teléfono
+                            <input type="text" name="telefono" placeholder="555-1010" required>
+                        </label>
+                        <button class="btn btn--primary">Crear estudiante</button>
+                    </form>
+                    <div class="result" id="createStudentResult"></div>
+                </article>
+
+                <article class="card">
+                    <h3>Asignar curso</h3>
+                    <p>PUT /api/estudiantes/{studentId}/cursos/{courseId}</p>
+                    <form id="assignCourseForm">
+                        <label>ID estudiante
+                            <input type="number" name="studentId" min="1" required>
+                        </label>
+                        <label>ID curso
+                            <input type="number" name="courseId" min="1" required>
+                        </label>
+                        <button class="btn btn--primary">Asignar</button>
+                    </form>
+                    <div class="result" id="assignCourseResult"></div>
+                </article>
+            </div>
+        </section>
+
+        <section class="panel">
+            <header class="panel__header">
+                <div>
+                    <p class="panel__tag">/api/profesores</p>
+                    <h2>Profesores</h2>
+                    <p>Gestiona la lista de docentes y sus datos básicos.</p>
+                </div>
+            </header>
+            <div class="panel__grid">
+                <article class="card">
+                    <h3>Listar profesores</h3>
+                    <button class="btn btn--primary" data-action="listProfessors">Listar</button>
+                    <div class="result" id="professorsList"></div>
+                </article>
+
+                <article class="card">
+                    <h3>Buscar profesor</h3>
+                    <form id="professorByIdForm">
+                        <label>ID del profesor
+                            <input type="number" name="professorId" min="1" required>
+                        </label>
+                        <button class="btn btn--primary">Buscar</button>
+                    </form>
+                    <div class="result" id="professorByIdResult"></div>
+                </article>
+
+                <article class="card card--wide">
+                    <h3>Crear profesor</h3>
+                    <form id="createProfessorForm" class="form-grid">
+                        <label>Nombre
+                            <input type="text" name="nombre" placeholder="Profesor Jirafales" required>
+                        </label>
+                        <label>Departamento
+                            <input type="text" name="departamento" placeholder="Matemáticas" required>
+                        </label>
+                        <button class="btn btn--primary">Crear profesor</button>
+                    </form>
+                    <div class="result" id="createProfessorResult"></div>
+                </article>
+            </div>
+        </section>
+
+        <section class="panel">
+            <header class="panel__header">
+                <div>
+                    <p class="panel__tag">/api/cursos</p>
+                    <h2>Cursos</h2>
+                    <p>Administra la oferta académica y vincula profesores.</p>
+                </div>
+            </header>
+            <div class="panel__grid">
+                <article class="card">
+                    <h3>Listar cursos</h3>
+                    <button class="btn btn--primary" data-action="listCourses">Listar</button>
+                    <div class="result" id="coursesList"></div>
+                </article>
+
+                <article class="card">
+                    <h3>Buscar por profesor</h3>
+                    <form id="coursesByProfessorForm">
+                        <label>Nombre del profesor
+                            <input type="text" name="professorName" placeholder="Juan Pérez" required>
+                        </label>
+                        <button class="btn btn--primary">Buscar</button>
+                    </form>
+                    <div class="result" id="coursesByProfessorResult"></div>
+                </article>
+
+                <article class="card card--wide">
+                    <h3>Crear curso</h3>
+                    <form id="createCourseForm" class="form-grid">
+                        <label>Nombre del curso
+                            <input type="text" name="nombreCurso" placeholder="Cálculo I" required>
+                        </label>
+                        <label>ID Profesor
+                            <input type="number" name="profesorId" min="1" required>
+                        </label>
+                        <button class="btn btn--primary">Crear curso</button>
+                    </form>
+                    <div class="result" id="createCourseResult"></div>
+                </article>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <p>Frontend estático (HTML, CSS, JS) para la API de Universidad.</p>        
+    </footer>
+
+    <script src="main.js"></script>
+</body>
+</html>
+
